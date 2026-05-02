@@ -15,7 +15,7 @@ All geometries are projected to **EPSG:26985** (NAD83 / Maryland, meters).
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("dwillis/mdmaps")
+remotes::install_github("NewsAppsUMD/mdmaps")
 ```
 
 ## What's included (v1)
