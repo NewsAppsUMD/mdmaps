@@ -1,0 +1,25 @@
+Package: mdmaps
+Title: A collection of sf objects and related tibbles for making maps of Maryland
+Version: 0.1.0
+Authors@R:
+    person("Derek", "Willis", , "dpwillis@umd.edu", role = c("aut", "cre"))
+Description: Simple features boundary files for Maryland across various administrative and Census geographies.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends:
+    R (>= 3.5)
+Suggests:
+    testthat (>= 3.0.0),
+    tibble (>= 3.0.0),
+    ggplot2,
+    knitr,
+    rmarkdown
+LazyData: true
+LazyDataCompression: xz
+Config/testthat/edition: 3
+Imports:
+    cli,
+    sf
+VignetteBuilder: knitr

@@ -1,0 +1,94 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file. -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# mdmaps
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+`mdmaps` is an R data package providing pre-projected `sf` objects and
+related tibbles for making maps of Maryland. It is modeled on
+[`nycmaps`](https://github.com/kjhealy/nycmaps).
+
+All geometries are projected to **EPSG:26985** (NAD83 / Maryland, meters).
+
+## Installation
+
+``` r
+# install.packages("remotes")
+remotes::install_github("dwillis/mdmaps")
+```
+
+## What's included (v1)
+
+Statewide layers only in v1.
+
+**Administrative boundaries**
+
+- `md_state_sf` — state outline
+- `md_counties_sf` — 24 county-equivalents (23 counties + Baltimore City)
+- `md_counties` — county/FIPS lookup table
+- `md_sha_districts_sf` — 7 MDOT State Highway Administration engineering districts
+
+**Political districts**
+
+- `md_congressional_districts_sf` — 8 U.S. House districts (119th Congress)
+- `md_legislative_districts_sf` — 47 state legislative districts (Senate 1:1)
+- `md_delegate_subdistricts_sf` — 71 House of Delegates electing units (whole-LD multi-member and A/B/C sub-districts)
+
+**Census geographies**
+
+- `md_census_tracts_{2000,2010,2020}_sf` — decennial census tracts
+- `md_census_blocks_2020_sf` — 2020 census blocks (~84k features)
+- `md_pumas_{2010,2020}_sf` — Public Use Microdata Areas
+- `md_zcta_sf` — ZIP Code Tabulation Areas with 2019 ACS population
+- `md_zips` — ZCTA-to-county lookup table
+
+Later releases will add municipalities, school districts, shoreline, court
+districts, EMS regions, a dated precinct snapshot, and per-jurisdiction
+layers for Baltimore City.
+
+### Notes on specific layers
+
+- **`md_sha_districts_sf` and Baltimore City.** SHA is responsible for
+  state-maintained roads in the 23 counties but not inside Baltimore City,
+  which runs its own DOT. The `counties` attribute in each district row
+  therefore does **not** list Baltimore City, even though the polygons
+  themselves cover its land area (District 4 wraps around the city).
+  Treat the `counties` field as the SHA maintenance footprint, not as a
+  strict geographic county list.
+
+## Example
+
+``` r
+library(mdmaps)
+library(ggplot2)
+
+ggplot(md_counties_sf) +
+  geom_sf() +
+  theme_void()
+```
+
+## Building the data
+
+Data objects are rebuilt from source via `data-raw/build_data.R`:
+
+``` r
+source("data-raw/build_data.R")
+```
+
+Most Tier-1 datasets are pulled from Census TIGER/Line via the
+[`tigris`](https://cran.r-project.org/package=tigris) package, so no
+shapefiles are checked into this repo.

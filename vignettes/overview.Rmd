@@ -1,0 +1,105 @@
+---
+title: "Overview of mdmaps"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Overview of mdmaps}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5,
+  out.width = "100%"
+)
+```
+
+```{r setup}
+library(mdmaps)
+library(ggplot2)
+library(sf)
+```
+
+`mdmaps` ships pre-projected `sf` objects and companion tibbles for
+making maps of Maryland. Every `sf` object is in **EPSG:26985**
+(NAD83 / Maryland, meters) so layers can be combined without
+reprojection.
+
+## The base map
+
+The state outline and counties are the two layers you'll reach for most
+often.
+
+```{r counties}
+ggplot() +
+  geom_sf(data = md_state_sf, fill = "grey95", color = "grey40") +
+  geom_sf(data = md_counties_sf, fill = NA, color = "grey20", linewidth = 0.3) +
+  theme_void()
+```
+
+## Political districts
+
+Maryland has 8 U.S. House districts, 47 state legislative districts
+(each electing 1 Senator), and 71 House of Delegates electing units
+(some whole-LD multi-member, some A/B/C sub-districts).
+
+```{r districts}
+ggplot() +
+  geom_sf(data = md_state_sf, fill = "grey95") +
+  geom_sf(data = md_congressional_districts_sf,
+          aes(fill = district_num), color = "white", linewidth = 0.2) +
+  scale_fill_viridis_c(guide = "none") +
+  labs(title = "Maryland congressional districts") +
+  theme_void()
+```
+
+## Census geographies
+
+Three decennial vintages of tracts ship, plus 2020 blocks, both PUMA
+vintages, and ZCTAs with 2019 ACS population.
+
+```{r zctas}
+ggplot(md_zcta_sf) +
+  geom_sf(aes(fill = population), color = NA) +
+  scale_fill_viridis_c(trans = "log10", na.value = "grey90",
+                       name = "Population") +
+  labs(title = "Population by ZCTA (2019 ACS)") +
+  theme_void()
+```
+
+## Municipalities
+
+Maryland is not a strong-municipality state — most suburban land is
+unincorporated county territory. `md_municipalities_sf` gives the 157
+or so incorporated places.
+
+```{r munis}
+ggplot() +
+  geom_sf(data = md_counties_sf, fill = "grey95", color = "grey60") +
+  geom_sf(data = md_municipalities_sf, fill = "steelblue", color = NA) +
+  theme_void()
+```
+
+## MDOT SHA districts
+
+State Highway Administration engineering districts — the boundary
+SHA uses for maintenance and CHART incident response.
+
+```{r sha}
+ggplot(md_sha_districts_sf) +
+  geom_sf(aes(fill = factor(district_num)), color = "white") +
+  scale_fill_brewer(palette = "Set2", name = "District") +
+  theme_void()
+```
+
+## Lookups
+
+Companion tibbles round out the spatial layers:
+
+```{r lookups}
+head(md_counties)
+head(md_zips)
+```
