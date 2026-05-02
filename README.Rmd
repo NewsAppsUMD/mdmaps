@@ -28,7 +28,7 @@ All geometries are projected to **EPSG:26985** (NAD83 / Maryland, meters).
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("dwillis/mdmaps")
+remotes::install_github("NewsAppsUMD/mdmaps")
 ```
 
 ## What's included (v1)
@@ -70,14 +70,44 @@ layers for Baltimore City.
   Treat the `counties` field as the SHA maintenance footprint, not as a
   strict geographic county list.
 
-## Example
+## Examples
 
-``` r
+```{r load, message=FALSE}
 library(mdmaps)
 library(ggplot2)
+```
 
+### Counties
+
+```{r counties-map}
 ggplot(md_counties_sf) +
   geom_sf() +
+  theme_void()
+```
+
+### Congressional Districts
+
+```{r congressional}
+md_congressional_districts_sf
+```
+
+```{r congressional-map}
+ggplot(md_congressional_districts_sf) +
+  geom_sf(aes(fill = factor(district_num))) +
+  scale_fill_brewer(palette = "Set2", name = "District") +
+  theme_void()
+```
+
+### ZIP Code Tabulation Areas
+
+```{r zctas}
+md_zcta_sf
+```
+
+```{r zctas-map}
+ggplot(md_zcta_sf) +
+  geom_sf(aes(fill = population), color = NA) +
+  scale_fill_viridis_c(name = "Population\n(2019 ACS)", labels = scales::comma) +
   theme_void()
 ```
 
